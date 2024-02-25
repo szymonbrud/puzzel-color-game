@@ -3,13 +3,15 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 // TODO: 1 zrobinie algorytmu do szukania zagadek
 
+const HOW_BIG = 5;
+const HOW_MANY_COLORS = 2;
+
 const StyledContainer = styled.div`
   width: 100%;
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
   gap: 50px;
 `;
 
@@ -21,8 +23,8 @@ const StyledRandomBoardContainer = styled.div`
 
 const StyledRandomBoard = styled.div`
   display: grid;
-  grid-template-columns: 100px 100px;
-  grid-template-rows: 100px 100px;
+  grid-template-columns: repeat(${HOW_BIG}, 100px);
+  grid-template-rows: repeat(${HOW_BIG}, 100px);
 `;
 
 const handleColorType = (color) => {
@@ -62,8 +64,6 @@ const InsideColor = styled.div`
   background: ${({ color }) => (color === 1 ? "blue" : "red")};
 `;
 
-const HOW_BIG = 2;
-const HOW_MANY_COLORS = 2;
 function App() {
   const [randomBoard, setRandomBoard] = useState(null);
   const [randomColors, setRandomColors] = useState(null);
@@ -115,7 +115,6 @@ function App() {
     return [result, random];
   };
 
-  console.log("HRE", myGameBoard);
   const onPointBoard = (id, colorToChange) => {
     console.log(id);
     if (id < HOW_BIG) {
@@ -125,7 +124,6 @@ function App() {
         console.log(arr);
         return [...arr];
       });
-      // result[id].fill(colorToChange);
     } else {
       const col = id - HOW_BIG;
       setMyGameBoard((prev) => {
@@ -135,26 +133,13 @@ function App() {
           );
         });
       });
-      // result = result.map((inArr) => {
-      //   return inArr.map((prevColors, index) =>
-      //       index === col ? colorToChange : prevColors,
-      //   );
-      // });
     }
   };
 
-  myGameBoard.map((e) =>
-    e.map((e2) => {
-      console.log("here 222", e2);
-    }),
-  );
-
   useEffect(() => {
-    const [result, randomColors] = main();
+    const [result, randomColors] = main(HOW_BIG, HOW_MANY_COLORS);
     setRandomBoard(result);
     setRandomColors(randomColors);
-    const slicedArray = randomColors.slice(2, 4);
-    console.log(slicedArray);
   }, []);
 
   return (
