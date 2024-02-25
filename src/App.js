@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 // TODO: 1 zrobinie algorytmu do szukania zagadek
 
-const HOW_BIG = 5;
-const HOW_MANY_COLORS = 2;
+const HOW_BIG = 15;
+const HOW_MANY_COLORS = 8;
 
 const StyledContainer = styled.div`
   width: 100%;
@@ -30,9 +30,21 @@ const StyledRandomBoard = styled.div`
 const handleColorType = (color) => {
   switch (color) {
     case 1:
-      return "blue";
+      return "#FA7F08";
     case 2:
-      return "red";
+      return "#348888";
+    case 3:
+      return "#9EF8EE";
+    case 4:
+      return "#44803F";
+    case 5:
+      return "#FF5A33";
+    case 6:
+      return "#FFEC5C";
+    case 7:
+      return "#1C2621";
+    case 8:
+      return "#FF86AE";
     case null:
       return "white";
     default:
@@ -59,9 +71,10 @@ const StyledColumnColors = styled.div`
 `;
 
 const InsideColor = styled.div`
-  width: 20px;
-  height: 20px;
-  background: ${({ color }) => (color === 1 ? "blue" : "red")};
+  width: 30px;
+  height: 30px;
+  background: ${({ color }) => handleColorType(color)};
+  cursor: pointer;
 `;
 
 function App() {
@@ -108,7 +121,7 @@ function App() {
       }
     };
 
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 1000; i++) {
       const randomClick = Math.floor(Math.random() * (howBig * howBig));
       onPaint(randomClick, random[randomClick]);
     }
