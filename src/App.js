@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 
 import styled from "styled-components";
-// TODO: 1 zrobinie algorytmu do szukania zagadek
 
-const HOW_BIG = 15;
-const HOW_MANY_COLORS = 8;
+const HOW_BIG = 8;
+const HOW_MANY_COLORS = 4;
 
 const StyledContainer = styled.div`
   width: 100%;
