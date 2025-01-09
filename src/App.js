@@ -1,9 +1,16 @@
-import { useEffect, useState } from "react";
+import {useEffect, useMemo, useState} from "react";
 
 import styled from "styled-components";
 
+import { v4 as uuidv4 } from 'uuid';
+
+// const HOW_BIG = 12;
+// const HOW_MANY_COLORS = 7; // 4
+// const HOW_MIX = 1000000;
+
 const HOW_BIG = 8;
-const HOW_MANY_COLORS = 4;
+const HOW_MANY_COLORS = 8; // 4
+const HOW_MIX = 1000000;
 
 const StyledContainer = styled.div`
   width: 100%;
@@ -102,7 +109,19 @@ function App() {
       }
     };
 
-    const random = getRandomColors();
+    const uniqueInArray = (arr) => {
+      const set = new Set();
+      arr.forEach((el) => set.add(el));
+      return set.size
+    };
+
+    let random = null;
+
+    while (!random){
+      const randomColors = getRandomColors();
+      if(uniqueInArray(randomColors) === HOW_MANY_COLORS) random = randomColors;
+    }
+
 
     let result = Array.from({ length: howBig }, (_) =>
       Array.from({ length: howBig }),
@@ -120,7 +139,7 @@ function App() {
       }
     };
 
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < HOW_MIX; i++) {
       const randomClick = Math.floor(Math.random() * (howBig * howBig));
       onPaint(randomClick, random[randomClick]);
     }
@@ -128,12 +147,10 @@ function App() {
   };
 
   const onPointBoard = (id, colorToChange) => {
-    console.log(id);
     if (id < HOW_BIG) {
       setMyGameBoard((prev) => {
         let arr = prev;
         arr[id].fill(colorToChange);
-        console.log(arr);
         return [...arr];
       });
     } else {
@@ -154,12 +171,50 @@ function App() {
     setRandomColors(randomColors);
   }, []);
 
+  console.log(randomBoard);
+  console.log(randomColors);
+
+  const spliceArray = (array) => {
+    const middleIndex = Math.floor(array.length / 2);
+    const leftArray = array.slice(0, middleIndex);
+    const rightArray = array.slice(middleIndex, array.length);
+    return [leftArray, rightArray];
+  };
+
+  const generateResultToCopy = useMemo(() => {
+    if(randomBoard && randomColors){
+
+      const [left, bottom] = spliceArray(randomColors)
+
+      return {
+        id: uuidv4(),
+        level: null,
+        schema: randomBoard,
+        paintings: {
+          side: left,
+          bottom
+        }
+      };
+    }
+  }, [randomBoard, randomColors])
+
+
+
   return (
     <>
       {randomBoard === null ? (
         "Ładowanie"
       ) : (
         <StyledContainer>
+          <button onClick={() => navigator.clipboard.writeText(JSON.stringify(generateResultToCopy))} style={{
+            position: 'absolute',
+            left: '50%',
+            top: '50px',
+            transform: 'translate(-50%, 0)',
+            width: '200px',
+            height: '60px',
+            fontSize: '40px'
+          }}>COPY</button>
           <StyledRandomBoardContainer>
             <StyledRowColors>
               {randomColors.slice(0, HOW_BIG).map((e) => (
